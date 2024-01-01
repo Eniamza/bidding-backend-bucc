@@ -1,0 +1,20 @@
+{
+  "name": "bidding-backend-bucc",
+  "version": "0.1.0",
+  "description": "A bidding backend for esports bids",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ."
+  },
+  "author": "Eniamza",
+  "license": "CC-BY-NC-ND-2.0",
+  "dependencies": {
+    "axios": "^1.6.3",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
