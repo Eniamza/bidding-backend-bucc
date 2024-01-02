@@ -46,6 +46,32 @@ let getSinglePlayer = async function(ign){ //Search Player by IGN
 
 }
 
-let updateSinglePlayer
+let updateSinglePlayer = async function(playerInfo) { //Update only a single player
 
-module.exports = {getAllPlayers,getSinglePlayer}
+
+    try {
+
+        let playerExists = playerRef.where("ign","==",playerInfo.ign)
+        playerExists = await playerExists.get()
+        
+        if(!playerExists.empty) {
+           throw "Player already exists"
+   
+        }
+
+        const res = await db.collection('players').add(playerInfo);
+
+        return res.id 
+          
+
+
+        
+    } catch (error) {
+
+        return error
+        
+    }
+
+}
+
+module.exports = {getAllPlayers,getSinglePlayer,updateSinglePlayer}

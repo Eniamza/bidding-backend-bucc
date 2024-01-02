@@ -1,6 +1,6 @@
 const express = require('express');
 const player = express.Router();
-const { getAllPlayers, getSinglePlayer } = require("../firebase/utils/firestore");
+const { getAllPlayers, getSinglePlayer, updateSinglePlayer } = require("../firebase/utils/firestore");
 const { isValidAdmin } = require("../firebase/utils/fireuser");
 
 player.get("/all", async (req, res) => {
@@ -75,7 +75,10 @@ player.post("/update", async (req, res) => {
             return res.status(400).send('Invalid IGN.');
         }
 
-        return res.status(200).send("UPDATED");
+        let resUpdate = await updateSinglePlayer(playerInfo)
+        console.log()
+        return res.status(200).json({playerid:resUpdate})
+
     } catch (error) {
         return res.status(500).send('Something went wrong on the server');
     }
