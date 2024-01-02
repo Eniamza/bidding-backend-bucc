@@ -46,4 +46,6 @@ let getSinglePlayer = async function(ign){ //Search Player by IGN
 
 }
 
+let updateSinglePlayer
+
 module.exports = {getAllPlayers,getSinglePlayer}

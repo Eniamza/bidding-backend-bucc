@@ -65,7 +65,7 @@ player.post("/update", async (req, res) => {
         if (typeof basePrice !== 'number' || basePrice < 0) {
             return res.status(400).send('Invalid base price.');
         }
-        if (!Array.isArray(aucHist) || !aucHist.every(item => typeof item === 'object')) {
+        if (!Array.isArray(aucHist)) {
             return res.status(400).send('Invalid auction history.');
         }
         if (!isValidUrl(profileImage)) {
