@@ -109,6 +109,9 @@ team.post("/update",async(req,res) => { //Updates a single team info, including 
             return res.status(400).send('Invalid logoURL in teamInfo.');
         }
 
+        teamData.balance = 1000
+        teamData.players = []
+
         let resupdate = await updateSingleTeam(teamData)
         return res.status(200).json(resupdate)
 
