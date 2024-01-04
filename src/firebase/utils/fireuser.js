@@ -57,5 +57,6 @@ let isValidManager = async function(idToken) {
 }
 
 module.exports = {
-    isValidAdmin
+    isValidAdmin,
+    isValidManager
 }
