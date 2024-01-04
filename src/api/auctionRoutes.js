@@ -60,7 +60,8 @@ auction.post("/update",async(req,res) => { //Creates a new Auction
             return res.status(400).send({error:"Please pass a valid auction title"})
         }
 
-        
+        let res = await createAuction(auctionInfo)
+        return res.status(200).json({id:res})
 
 
     } catch (error) {
