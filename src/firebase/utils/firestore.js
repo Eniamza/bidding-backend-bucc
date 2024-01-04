@@ -94,4 +94,55 @@ let getAllTeams = async function(lastDocID) { //only fetch the first ten players
     
 }
 
-module.exports = {getAllPlayers,getSinglePlayer,updateSinglePlayer,getAllTeams}
+let getSingleTeam = async function(teamID){ //Search Player by IGN
+
+    try {
+        
+        let docRef = teamRef.doc(teamID)
+        const doc = await docRef.get();
+        if (!doc.exists) {
+            throw null
+        } else {
+            return doc.data()
+        }
+
+    } catch (error) {
+        return error
+    }
+}
+
+let updateSingleTeam = async function(teamInfo) { //Update only a single player
+
+
+    try {
+
+        let teamExists = teamRef.where("teamTitle","==",teamInfo.teamTitle)
+        teamExists = await teamExists.get()
+        
+        if(!teamExists.empty) {
+           throw "Team already exists"
+   
+        }
+
+        let ManagerExists = teamRef.where("managerUID","==",teamInfo.managerUID)
+        ManagerExists = await ManagerExists.get()
+
+        if(!ManagerExists.empty) {
+            throw "Manager already exists in another team."
+    
+         }
+
+        const res = await db.collection('teams').add(teamInfo);
+
+        return res.id
+        
+    } catch (error) {
+
+        return error
+        
+    }
+
+}
+
+module.exports = {getAllPlayers,getSinglePlayer,updateSinglePlayer,
+    getAllTeams,getSingleTeam,updateSingleTeam}
