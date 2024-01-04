@@ -193,7 +193,27 @@ let updateSingleAuction = async function(auctionInfo) { //Update only a single p
 
 }
 
+let getSingleAuction = async function(auctionID){ //Search Player by IGN
+
+    try {
+
+        let docRef = auctionRef.doc(auctionID)
+        const doc = await docRef.get();
+        if (!doc.exists) {
+            throw null
+        } else {
+            return doc.data()
+        }
+        
+    } catch (error) {
+
+        return error
+        
+    }
+
+}
+
 module.exports = {
     getAllPlayers,getSinglePlayer,updateSinglePlayer,
     getAllTeams,getSingleTeam,updateSingleTeam,
-    getAllAuctions}
+    getAllAuctions,updateSingleAuction,getSingleAuction}
