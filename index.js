@@ -4,9 +4,11 @@ var bodyParser = require('body-parser')
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-const route = require("./src/api/playerRoutes")
+const {player} = require("./src/api/playerRoutes")
+const {team} = require("./src/api/teamRoutes")
 
 app.use(bodyParser.json())
-app.use('/api/player',route.player)
+app.use('/api/player',player)
+app.use('/api/team',team)
 
 server.listen(3000);

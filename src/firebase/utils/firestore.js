@@ -5,6 +5,7 @@ const { getFirestore } = require('firebase-admin/firestore');
 let db = getFirestore()
 
 const playerRef = db.collection('players');
+const teamRef = db.collection('teams');
 
 let getAllPlayers = async function(lastDocID) { //only fetch the first ten players , //returns snapshot and last document
 
@@ -74,4 +75,23 @@ let updateSinglePlayer = async function(playerInfo) { //Update only a single pla
 
 }
 
-module.exports = {getAllPlayers,getSinglePlayer,updateSinglePlayer}
+let getAllTeams = async function(lastDocID) { //only fetch the first ten players , //returns snapshot and last document
+
+    let allTeams = teamRef.limit(20) //Limit to first 10 and order by base price
+
+    if(lastDocID){
+        let doc = await teamRef.doc(lastDocID).get();
+        allTeams = allTeams.startAfter(doc)
+    }
+    const snapshot = await allTeams.get()
+
+    
+    let teams = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    let lastReturnedDoc = snapshot.docs[snapshot.docs.length-1].id
+
+    console.log({teams,lastReturnedDoc})
+    return {teams,lastReturnedDoc}
+    
+}
+
+module.exports = {getAllPlayers,getSinglePlayer,updateSinglePlayer,getAllTeams}
