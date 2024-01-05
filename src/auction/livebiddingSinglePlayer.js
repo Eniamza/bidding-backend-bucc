@@ -4,6 +4,15 @@ let currentBidPlayer = {}
 let currentHighestBid = 0
 let currentHighestBidder = ""
 let currentBidStatus = ""    // "open" or "closed"
+let teamBalances = {} // {teamId: balance}
+let teamLoans = {} // {teamId: loanedAmount} Loaned amount must be less than the team Balance
+let bidQueue = []
+
+
+
+    // When the bid starts, this script should update the variables with the current player
+    // and then an updateBid is called, this script should update the variables with the new bid
+    // Write the neccesary variables
 
 let startBidPlayer = async function (player) {
     try {

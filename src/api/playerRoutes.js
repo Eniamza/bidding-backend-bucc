@@ -45,7 +45,7 @@ player.post("/update", async (req, res) => {
         }
 
         let playerInfo = req.body;
-        const { skills, stats, basePrice, aucHist, profileImage, ign } = playerInfo;
+        const { skills, stats, basePrice, aucHist, profileImage, ign, category, mains } = playerInfo;
 
         function isValidUrl(string) {
             try {
@@ -73,6 +73,14 @@ player.post("/update", async (req, res) => {
         }
         if (typeof ign !== 'string' || ign.trim() === '') {
             return res.status(400).send('Invalid IGN.');
+        }
+
+        if (typeof category !== 'string' || category.trim() === '') {
+            return res.status(400).send('Invalid category.');
+        }
+
+        if (!Array.isArray(mains) || !mains.every(main => typeof main === 'string') || mains.length > 3) {
+            return res.status(400).send('Invalid mains array. Please choose 3 main agents');
         }
 
         let resUpdate = await updateSinglePlayer(playerInfo)

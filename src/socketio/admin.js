@@ -8,6 +8,10 @@ module.exports = async function (io,socket) {
     console.log(socket.uid)
     console.log("New Admin connected:",socket.id);
 
-    
+    socket.on("bidStart",()=>{
+        io.emit("bidStart","BID HAS STARTEDDDDD")
+    })
+
+
 
 }
