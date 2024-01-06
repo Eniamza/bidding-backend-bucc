@@ -10,6 +10,7 @@ const {getSingleAuction,getSinglePlayer,getAllTeams, getSinglePlayerByID} = requ
 const fs = require('fs').promises;
 
 let currentBidPlayer = {}
+let currentAuctionBids = []
 let currentAuction
 let currentHighestBid = 0
 let currentHighestBidder = ""
@@ -17,7 +18,7 @@ let currentBidStatus = ""    // "open" or "closed"
 let teamBalances = {} // {teamId: balance}
 let teamLoans = {} // {teamId: loanedAmount} Loaned amount must be less than the team Balance
 let bidQueue = []
-let aucHistory = [] // {playerId: {teamId: bidAmount}} // This is the history of the auction called on bidEnded
+
 
 
 
@@ -88,11 +89,23 @@ let startBidPlayer = async function (playerid,auctionid) {
         let player = await getSinglePlayerByID(playerid)
         let auction = await getSingleAuction(auctionid)
 
+        console.log(auction)
+
+
         if(player === null || auction === null){
 
             console.log("Player or Auction is null. Please provide proper IDs")
             return false
         }
+
+        if(auction.players.indexOf(playerid) === -1){
+
+            console.log("Player isn't listed in the auction")
+            return false
+        }
+
+
+
 
         let allTeams = await getAllTeams() 
         allTeams = allTeams.teams
@@ -113,6 +126,8 @@ let startBidPlayer = async function (playerid,auctionid) {
         currentBidStatus = "open"
         teamLoans = {}
         bidQueue = []
+
+        console.log(await replytoBidStart())
 
         await saveData();
         return await replytoBidStart()
@@ -153,7 +168,8 @@ let saveData = async function() {
         teamLoans,
         bidQueue,
         aucHistory,
-        currentAuction
+        currentAuction,
+        currentAuctionBids
     };
     await fs.writeFile('data.json', JSON.stringify(data));
 }
@@ -169,6 +185,7 @@ let loadData = async function() {
         bidQueue = data.bidQueue;
         aucHistory = data.aucHistory;
         currentAuction = data.currentAuction;
+        currentAuctionBids = data.currentAuctionBids;
 
     } catch (error) {
         console.error('Failed to load data:', error);
