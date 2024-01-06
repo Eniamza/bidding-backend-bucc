@@ -31,7 +31,7 @@ auction.post("/update",async(req,res) => { //Creates a new Auction
 
 
 
-        const {date,teams,auctionTitle,bids,status} = auctionInfo
+        const {date,teams,auctionTitle,bids,status,players} = auctionInfo
 
         if(!date || !teams || !auctionTitle ||  !status){
             return res.status(400).send({error:"Please pass all required fields"})
@@ -58,6 +58,10 @@ auction.post("/update",async(req,res) => { //Creates a new Auction
 
         if(!auctionTitle){
             return res.status(400).send({error:"Please pass a valid auction title"})
+        }
+
+        if(players !== undefined && !Array.isArray(players)){
+            return res.status(400).send({error:"Please pass a valid array of players"})
         }
 
         let res = await updateSingleAuction(auctionInfo)

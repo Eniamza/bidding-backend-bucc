@@ -22,7 +22,7 @@ let getAllPlayers = async function(lastDocID) { //only fetch the first ten playe
     let players = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     let lastReturnedDoc = snapshot.docs[snapshot.docs.length-1].id
 
-    console.log({players,lastReturnedDoc})
+    // console.log({players,lastReturnedDoc})
     return {players,lastReturnedDoc}
     
 }
@@ -39,12 +39,34 @@ let getSinglePlayer = async function(ign){ //Search Player by IGN
             throw null
         }
 
+        // console.log(playerInfo)
         return playerInfo
 
     } catch (error) {
         return error
     }
 
+
+}
+
+let getSinglePlayerByID = async function(playerID){ //Search Player by ID
+
+    try {
+        
+        let docRef = playerRef.doc(playerID)
+        const doc = await docRef.get();
+        if (!doc.exists) {
+            throw null
+        } else {
+            // console.log(doc.data())
+            return doc.data()
+        }
+
+    }catch (error) {
+        return error
+    
+
+}
 
 }
 
@@ -61,8 +83,20 @@ let updateSinglePlayer = async function(playerInfo) { //Update only a single pla
    
         }
 
-        const res = await db.collection('players').add(playerInfo);
+        if(playerInfo.id !== undefined){ //if ID exists, update the player instead of creating a new one
 
+            let docRef = playerRef.doc(playerInfo.id)
+            const doc = await docRef.get();
+            if (!doc.exists) {
+                throw null
+            } else {
+                const res = await docRef.update(playerInfo);
+                return res.id
+            }
+            
+        }
+
+        const res = await db.collection('players').add(playerInfo);
         return res.id 
           
 
@@ -78,7 +112,7 @@ let updateSinglePlayer = async function(playerInfo) { //Update only a single pla
 
 let getAllTeams = async function(lastDocID) { //only fetch the first ten players , //returns snapshot and last document
 
-    let allTeams = teamRef.limit(20) //Limit to first 10 and order by base price
+    let allTeams = teamRef//Limit to first 10 and order by base price
 
     if(lastDocID){
         let doc = await teamRef.doc(lastDocID).get();
@@ -90,7 +124,7 @@ let getAllTeams = async function(lastDocID) { //only fetch the first ten players
     let teams = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     let lastReturnedDoc = snapshot.docs[snapshot.docs.length-1].id
 
-    console.log({teams,lastReturnedDoc})
+    // console.log({teams,lastReturnedDoc})
     return {teams,lastReturnedDoc}
     
 }
@@ -104,10 +138,12 @@ let getSingleTeam = async function(teamID){ //Search Player by IGN
         if (!doc.exists) {
             throw null
         } else {
+            // console.log(doc.data())
             return doc.data()
         }
 
     } catch (error) {
+        console.log(error)
         return error
     }
 }
@@ -119,7 +155,19 @@ let updateSingleTeam = async function(teamInfo) { //Update only a single player
 
         let teamExists = teamRef.where("teamTitle","==",teamInfo.teamTitle)
         teamExists = await teamExists.get()
+
+        if(teamInfo.id !== undefined){ //if ID exists, update the team instead of creating a new one
         
+            let docRef = teamRef.doc(teamInfo.id)
+            const doc = await docRef.get();
+            if (!doc.exists) {
+                throw null
+            } else {
+                const res = await docRef.update(teamInfo);
+                return res.id
+            }
+
+        }
         if(!teamExists.empty) {
            throw "Team already exists"
    
@@ -178,6 +226,19 @@ let updateSingleAuction = async function(auctionInfo) { //Update only a single p
             return res.status(401).send({ error: "Not Authorized" });
         }
 
+        if(auctionInfo.id !== undefined){ //if ID exists, update the auction instead of creating a new one
+
+            let docRef = auctionRef.doc(auctionInfo.id)
+            const doc = await docRef.get();
+            if (!doc.exists) {
+                throw null
+            } else {
+                const res = await docRef.update(auctionInfo);
+                return res.id
+            }
+
+        }
+
 
         const res = await db.collection('auctions').add(auctionInfo);
 
@@ -213,7 +274,8 @@ let getSingleAuction = async function(auctionID){ //Search Player by IGN
 
 }
 
+
 module.exports = {
-    getAllPlayers,getSinglePlayer,updateSinglePlayer,
+    getAllPlayers,getSinglePlayer,updateSinglePlayer,getSinglePlayerByID,
     getAllTeams,getSingleTeam,updateSingleTeam,
     getAllAuctions,updateSingleAuction,getSingleAuction}

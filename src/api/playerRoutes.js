@@ -45,7 +45,7 @@ player.post("/update", async (req, res) => {
         }
 
         let playerInfo = req.body;
-        const { skills, stats, basePrice, aucHist, profileImage, ign, category, mains } = playerInfo;
+        const { skills, stats, basePrice, aucHist, profileImage, ign, category, mains, id } = playerInfo;
 
         function isValidUrl(string) {
             try {
